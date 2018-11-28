@@ -8,46 +8,47 @@
 
 import UIKit
 
-class VideoCell: UICollectionViewCell {
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupViews()
-    }
+class VideoCell: BaseCell {
     
     let thumbnailImageView: UIImageView = {
         let iv = UIImageView()
-        iv.backgroundColor = .blue
+        iv.image = UIImage(named: "taylor_swift_blank_space")
+        iv.contentMode = .scaleAspectFill
+        iv.clipsToBounds = true
         return iv
     }()
     
     let userProfileImageView: UIImageView = {
         let iv = UIImageView()
-        iv.backgroundColor = .green
+        iv.image = UIImage(named: "taylor_swift_profile")
+        iv.layer.cornerRadius = 22
+        iv.layer.masksToBounds = true
         return iv
     }()
     
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.backgroundColor = .purple
+        label.text = "Taylor Swift Blank Space"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    let subTitleTextView: UILabel = {
-        let label = UILabel()
-        label.backgroundColor = .red
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    let subTitleTextView: UITextView = {
+        let textView = UITextView()
+        textView.text = "TaylorSwiftVEVO • 1,604,684,607 views • 2 years ago"
+        textView.textColor = UIColor.lightGray
+        textView.textContainerInset = UIEdgeInsetsMake(0, -4, 0, 0)
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        return textView
     }()
     
     let separateLineView: UIView = {
         let view = UIView()
-        view.backgroundColor = .black
+        view.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         return view
     }()
     
-    func setupViews() {
+    override func setupViews() {
         addSubview(thumbnailImageView)
         addSubview(separateLineView)
         addSubview(userProfileImageView)
@@ -79,7 +80,7 @@ class VideoCell: UICollectionViewCell {
         
         
         ///top constraint
-        addConstraint(NSLayoutConstraint(item: subTitleTextView, attribute: .top, relatedBy: .equal, toItem: titleLabel, attribute: .bottom, multiplier: 1, constant: 8))
+        addConstraint(NSLayoutConstraint(item: subTitleTextView, attribute: .top, relatedBy: .equal, toItem: titleLabel, attribute: .bottom, multiplier: 1, constant: 4))
         
         //left constraint
         addConstraint(NSLayoutConstraint(item: subTitleTextView, attribute: .left, relatedBy: .equal, toItem: userProfileImageView, attribute: .right, multiplier: 1, constant: 8))
@@ -88,7 +89,7 @@ class VideoCell: UICollectionViewCell {
         addConstraint(NSLayoutConstraint(item: subTitleTextView, attribute: .right, relatedBy: .equal, toItem: thumbnailImageView, attribute: .right, multiplier: 1, constant: 0))
         
         //height constraint
-        addConstraint(NSLayoutConstraint(item: subTitleTextView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0, constant: 20))
+        addConstraint(NSLayoutConstraint(item: subTitleTextView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0, constant: 30))
         
         
     }
@@ -132,23 +133,6 @@ class VideoCell: UICollectionViewCell {
         thumbnailImageView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16).isActive = true
         
     }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
 }
 
-extension UIView {
-    func addConstrantsWithVisualFormat(format: String, views: UIView...) {
-        var viewsDictionary = [String:UIView]()
-        
-        for (index,view) in views.enumerated() {
-            view.translatesAutoresizingMaskIntoConstraints = false
-            let key = "v\(index)"
-            viewsDictionary[key] = view
-            
-        }
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutFormatOptions(), metrics: nil, views: viewsDictionary))
-    }
-}
+

@@ -16,9 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        window = UIWindow(frame: UIScreen.main.bounds)
+        window = UIWindow()
         window?.makeKeyAndVisible()
-        
         
         
         let layout = UICollectionViewFlowLayout()
@@ -26,6 +25,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let homeController = HomeController(collectionViewLayout: layout)
         
         window?.rootViewController = UINavigationController(rootViewController: homeController)
+        
+        //below three lines will make bar color red and removew the shadow image
+        UINavigationBar.appearance().barTintColor = UIColor.rgb(red: 230, green: 32, blue: 31)
+        UINavigationBar.appearance().shadowImage = UIImage()
+        UINavigationBar.appearance().setBackgroundImage(UIImage(),for: .default)
+        
+        application.statusBarStyle = .lightContent
+        
+        let statusBarView = UIView()
+        statusBarView.backgroundColor = UIColor.rgb(red: 194, green: 31, blue: 31)
+        statusBarView.translatesAutoresizingMaskIntoConstraints = false
+        
+        window?.addSubview(statusBarView)
+        window?.addConstrantsWithVisualFormat(format: "H:|[v0]|", views: statusBarView)
+        window?.addConstrantsWithVisualFormat(format: "V:|[v0(20)]", views: statusBarView)
         
         return true
     }
