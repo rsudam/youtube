@@ -10,25 +10,66 @@ import UIKit
 
 class VideoCell: BaseCell {
     
-    let thumbnailImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.image = UIImage(named: "taylor_swift_blank_space")
+    var video: Video? {
+        didSet {
+            
+            if let title = video?.title {
+                
+                //16px is left space, 44px is profileImageview size, 8px is space bw title and profileimage, 16px is right space
+                // height is arbiturary large value
+                let size = CGSize(width: frame.width - 16 - 44 - 8 - 16, height: 10000)
+                
+                //need research
+                let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+                
+                let estimateRect = NSString(string: title).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font :UIFont.systemFont(ofSize: 14)], context: nil)
+                
+                if estimateRect.height > 20 {
+                    titleLabelHeightConstratint?.constant = 44
+                } else {
+                    titleLabelHeightConstratint?.constant = 20
+                }
+                titleLabel.text = title
+            }
+            
+            if let thumbnailImageUrl = video?.thumbnailImageName {
+                thumbnailImageView.uploadImageUsingUrlString(urlString: thumbnailImageUrl)
+            }
+            
+            if let profileImageUrl = video?.channel?.profileImageName {
+                userProfileImageView.uploadImageUsingUrlString(urlString: profileImageUrl)
+            }
+            
+            if let channelName = video?.channel?.name, let numberOfView = video?.numberOfView! {
+                
+                let numberFormater = NumberFormatter()
+                numberFormater.numberStyle = .decimal
+                let numberOfViews = numberFormater.string(from: numberOfView)
+                subTitleTextView.text = "\(channelName) • \(numberOfViews!) • 2 years ago "
+                
+            }
+            
+        }
+    }
+    
+    let thumbnailImageView: CustomUIImageView = {
+        let iv = CustomUIImageView()
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
         return iv
     }()
     
-    let userProfileImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.image = UIImage(named: "taylor_swift_profile")
+    let userProfileImageView: CustomUIImageView = {
+        let iv = CustomUIImageView()
         iv.layer.cornerRadius = 22
+        iv.contentMode = .scaleAspectFill
         iv.layer.masksToBounds = true
         return iv
     }()
     
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Taylor Swift Blank Space"
+        label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -48,6 +89,8 @@ class VideoCell: BaseCell {
         return view
     }()
     
+    var titleLabelHeightConstratint: NSLayoutConstraint?
+    
     override func setupViews() {
         addSubview(thumbnailImageView)
         addSubview(separateLineView)
@@ -62,7 +105,7 @@ class VideoCell: BaseCell {
         
         
         //vertical constraints
-        addConstrantsWithVisualFormat(format: "V:|-16-[v0]-8-[v1(44)]-16-[v2(1)]|", views: thumbnailImageView,userProfileImageView,separateLineView)
+        addConstrantsWithVisualFormat(format: "V:|-16-[v0]-8-[v1(44)]-36-[v2(1)]|", views: thumbnailImageView,userProfileImageView,separateLineView)
         
         addConstrantsWithVisualFormat(format: "H:|[v0]|", views: separateLineView)
         
@@ -76,7 +119,8 @@ class VideoCell: BaseCell {
         addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .right, relatedBy: .equal, toItem: thumbnailImageView, attribute: .right, multiplier: 1, constant: 0))
 
         //height constraint
-        addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0, constant: 20))
+        titleLabelHeightConstratint = NSLayoutConstraint(item: titleLabel, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0, constant: 20)
+        addConstraint(titleLabelHeightConstratint!)
         
         
         ///top constraint

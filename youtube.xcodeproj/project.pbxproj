@@ -8,11 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		8E06A259219B16BF0099E6FE /* VideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E06A258219B16BF0099E6FE /* VideoCell.swift */; };
+		8E6CB1FB21AF01BA00254F90 /* SettingsLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6CB1FA21AF01BA00254F90 /* SettingsLauncher.swift */; };
+		8E6CB1FD21AF0D3400254F90 /* SettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6CB1FC21AF0D3400254F90 /* SettingsCell.swift */; };
 		8E6FDAFA21AE5E2C008C55F2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6FDAF921AE5E2C008C55F2 /* Extensions.swift */; };
 		8E6FDAFC21AE68B3008C55F2 /* MenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6FDAFB21AE68B3008C55F2 /* MenuBar.swift */; };
 		8E6FDAFE21AE717C008C55F2 /* MenuBarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6FDAFD21AE717C008C55F2 /* MenuBarCell.swift */; };
 		8E6FDB0021AE7659008C55F2 /* BaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6FDAFF21AE7659008C55F2 /* BaseCell.swift */; };
 		8E6FDB0321AE8C61008C55F2 /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6FDB0221AE8C61008C55F2 /* Video.swift */; };
+		8E89868321AF815C0018EE26 /* Setting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E89868221AF815C0018EE26 /* Setting.swift */; };
 		8EF8D3392199D2A200E05913 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF8D3382199D2A200E05913 /* AppDelegate.swift */; };
 		8EF8D33B2199D2A200E05913 /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF8D33A2199D2A200E05913 /* HomeController.swift */; };
 		8EF8D33E2199D2A200E05913 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8EF8D33C2199D2A200E05913 /* Main.storyboard */; };
@@ -22,11 +25,14 @@
 
 /* Begin PBXFileReference section */
 		8E06A258219B16BF0099E6FE /* VideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCell.swift; sourceTree = "<group>"; };
+		8E6CB1FA21AF01BA00254F90 /* SettingsLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsLauncher.swift; sourceTree = "<group>"; };
+		8E6CB1FC21AF0D3400254F90 /* SettingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCell.swift; sourceTree = "<group>"; };
 		8E6FDAF921AE5E2C008C55F2 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		8E6FDAFB21AE68B3008C55F2 /* MenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBar.swift; sourceTree = "<group>"; };
 		8E6FDAFD21AE717C008C55F2 /* MenuBarCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarCell.swift; sourceTree = "<group>"; };
 		8E6FDAFF21AE7659008C55F2 /* BaseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCell.swift; sourceTree = "<group>"; };
 		8E6FDB0221AE8C61008C55F2 /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
+		8E89868221AF815C0018EE26 /* Setting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setting.swift; sourceTree = "<group>"; };
 		8EF8D3352199D2A200E05913 /* youtube.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = youtube.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EF8D3382199D2A200E05913 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8EF8D33A2199D2A200E05913 /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
@@ -51,6 +57,7 @@
 			isa = PBXGroup;
 			children = (
 				8EF8D33A2199D2A200E05913 /* HomeController.swift */,
+				8E6CB1FA21AF01BA00254F90 /* SettingsLauncher.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -62,6 +69,7 @@
 				8E6FDAFB21AE68B3008C55F2 /* MenuBar.swift */,
 				8E6FDAFD21AE717C008C55F2 /* MenuBarCell.swift */,
 				8E6FDAFF21AE7659008C55F2 /* BaseCell.swift */,
+				8E6CB1FC21AF0D3400254F90 /* SettingsCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -78,6 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				8E6FDB0221AE8C61008C55F2 /* Video.swift */,
+				8E89868221AF815C0018EE26 /* Setting.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -187,8 +196,11 @@
 			files = (
 				8EF8D33B2199D2A200E05913 /* HomeController.swift in Sources */,
 				8EF8D3392199D2A200E05913 /* AppDelegate.swift in Sources */,
+				8E6CB1FB21AF01BA00254F90 /* SettingsLauncher.swift in Sources */,
 				8E6FDAFE21AE717C008C55F2 /* MenuBarCell.swift in Sources */,
+				8E6CB1FD21AF0D3400254F90 /* SettingsCell.swift in Sources */,
 				8E06A259219B16BF0099E6FE /* VideoCell.swift in Sources */,
+				8E89868321AF815C0018EE26 /* Setting.swift in Sources */,
 				8E6FDB0021AE7659008C55F2 /* BaseCell.swift in Sources */,
 				8E6FDB0321AE8C61008C55F2 /* Video.swift in Sources */,
 				8E6FDAFA21AE5E2C008C55F2 /* Extensions.swift in Sources */,
