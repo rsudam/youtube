@@ -11,73 +11,47 @@ import UIKit
 class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     private let cellId = "cellId"
-    
-    var videos: [Video]?
-    
-    func fetchVideoData() {
-        let url = URL(string: "https://s3-us-west-2.amazonaws.com/youtubeassets/home.json")
-        URLSession.shared.dataTask(with: url!) { (data, resonce, error) in
-            if error != nil {
-                print(error!)
-                return
-            }
-            
-            do {
-                let json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers)
-                
-                self.videos = [Video]()
-                
-                for dictionary in json as! [[String:Any]] {
-                    let video = Video()
-                    video.title = dictionary["title"] as? String
-                    video.thumbnailImageName = dictionary["thumbnail_image_name"] as? String
-                    video.duration = dictionary["duration"] as? NSNumber
-                    video.numberOfView = dictionary["number_of_views"] as? NSNumber
-                    
-                    if let channelDict = dictionary["channel"] as? [String:Any] {
-                        let channel = Channel()
-                        channel.name = channelDict["name"] as? String
-                        channel.profileImageName = channelDict["profile_image_name"] as? String
-                        video.channel = channel
-                    }
-                    
-                    self.videos?.append(video)
-                }
-                
-                DispatchQueue.main.async {
-                    self.collectionView?.reloadData()
-                }
-                
-            }catch let jsonError {
-                print(jsonError)
-            }
-            
-        }.resume()
-    }
+    let trendingCellId = "trendingCellId"
+    let subscriptionCellId = "subscriptionCellId"
+    let titles = ["Home", "Trending", "Subscriptions", "Account"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        fetchVideoData()
+        //navigationItem.title = "Home"
+        navigationController?.navigationBar.isTranslucent = false
         
         collectionView?.backgroundColor = .white
         collectionView?.alwaysBounceVertical = true
         
         
         let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.width - 32, height: view.frame.height))
-        titleLabel.text = "Home"
+        titleLabel.text = "  Home"
         titleLabel.textColor = .white
         titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
         navigationItem.titleView = titleLabel
         
+        
+        setupCollectionView()
+        setupMenuBar()
+        setupNavBarItems()
+    }
+    
+    func setupCollectionView() {
+        
+        if let flowLayout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
+            flowLayout.scrollDirection  = .horizontal
+            flowLayout.minimumLineSpacing = 0
+        }
+        collectionView?.isPagingEnabled = true
+        
         navigationController?.navigationBar.isTranslucent = false
-        collectionView?.register(VideoCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView?.register(FeedCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView?.register(TrendingCell.self, forCellWithReuseIdentifier: trendingCellId)
+        collectionView?.register(SubscriptionCell.self, forCellWithReuseIdentifier: subscriptionCellId)
         
         collectionView?.contentInset = UIEdgeInsetsMake(50, 0, 0, 0)
         collectionView?.scrollIndicatorInsets = UIEdgeInsetsMake(50, 0, 0, 0)
-        
-        setupMenuBar()
-        setupNavBarItems()
     }
     
     func setupNavBarItems() {
@@ -90,57 +64,103 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     }
     
     @objc func handleSearch() {
-        print("123")
+        print("search")
     }
     
-    var settingsLauncher: SettingsLauncher?
+    func scrollToMenuIndex(menuIndex: Int) {
+        
+        let indexPath = IndexPath(item: menuIndex, section: 0)
+        collectionView?.scrollToItem(at: indexPath, at: .left, animated: true)
+        setTitlesForIndex(index: menuIndex)
+    }
+    
+    private func setTitlesForIndex(index: Int){
+        if let titleLabel = navigationItem.titleView as? UILabel {
+            titleLabel.text = "  \(titles[index])"
+        }
+    }
+    
+    lazy var settingsLauncher: SettingsLauncher = {
+        let launcher = SettingsLauncher()
+        launcher.homeController = self
+        return launcher
+    }()
+        
+        
     
     @objc func handleMore() {
-        settingsLauncher = SettingsLauncher()
-        settingsLauncher?.showSettings()
+        settingsLauncher.showSettings()
     }
     
+    func  showSettingsController(setting: Setting) {
+        let dummySettingsController = UIViewController()
+        dummySettingsController.navigationItem.title = setting.name.rawValue
+        dummySettingsController.view.backgroundColor = .white
+        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
+        navigationController?.pushViewController(dummySettingsController, animated: true)
+    }
     
-    let menuBar: MenuBar = {
+    lazy var menuBar: MenuBar = {
         let mb = MenuBar()
+        mb.homeController = self
         return mb
     }()
     
     private func setupMenuBar() {
+        
+        navigationController?.hidesBarsOnSwipe = true
+        
+        let redView = UIView()
+        redView.backgroundColor = UIColor.rgb(red: 230, green: 32, blue: 31)
+        view.addSubview(redView)
+        view.addConstrantsWithVisualFormat(format: "H:|[v0]|", views: redView)
+        view.addConstrantsWithVisualFormat(format: "V:[v0(50)]", views: redView)
+        
         view.addSubview(menuBar)
         view.addConstrantsWithVisualFormat(format: "H:|[v0]|", views: menuBar)
-        view.addConstrantsWithVisualFormat(format: "V:|[v0(50)]", views: menuBar)
+        view.addConstrantsWithVisualFormat(format: "V:[v0(50)]", views: menuBar)
+        menuBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
     }
     
     
     
     //MARK: inbuilt methods
+
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return videos?.count ?? 0
+        return 4
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! VideoCell
-       
-        cell.video = videos?[indexPath.row]
-       
+        
+        let identifier: String
+        if indexPath.item == 1 {
+            identifier = trendingCellId
+        } else if indexPath.item == 2 {
+            identifier = subscriptionCellId
+        } else {
+            identifier = cellId
+        }
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        // 16 / 9 is aspect ratio for all the videos
-        // -16 -16 is sustracted from the width becase of left and right spaces for the thumbnail image view
-        let height = (view.frame.width - 16 - 16) * 9 / 16
-        
-        // now add remaining components size to the height constant
-        // "V:|-16-[v0]-8-[v1(44)]-16-[v2(1)]|"
-        return CGSize(width: collectionView.frame.width, height: height + 16 + 8 + 88)
-        
+        return CGSize(width: view.frame.width, height: view.frame.height - 50)
     }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        menuBar.horizontalBarLeftAnchor?.constant = scrollView.contentOffset.x / 4
     }
+    
+    override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        let index = Int(targetContentOffset.pointee.x / view.frame.width)
+        let indexPath = IndexPath(item: index, section: 0)
+        menuBar.collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
+        setTitlesForIndex(index: index)
+    }
+    
 }
 
